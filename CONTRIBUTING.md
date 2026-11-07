@@ -26,6 +26,7 @@ The rules are the core of this plugin. When you suggest a change, give:
    ```bash
    claude plugin validate plugin
    claude plugin validate .
+   claude plugin test plugin
    ```
 4. Test the plugin in a real session:
    ```bash

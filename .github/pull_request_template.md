@@ -13,6 +13,7 @@
 
 - [ ] `claude plugin validate plugin` passes.
 - [ ] `claude plugin validate .` passes.
+- [ ] `claude plugin test plugin` passes.
 - [ ] I tested the plugin with `claude --plugin-dir plugin`.
 - [ ] I added a line to `CHANGELOG.md` under **Unreleased**.
 - [ ] The change contains no keys, tokens or personal data.

@@ -3,11 +3,22 @@ import type { Register } from 'claude-code'
 // Rules adapted from ASD-STE100 (Simplified Technical English) for chat answers.
 const STE_RULES = `# Writing style: ASD-STE100 Simplified Technical English
 
-Write every message to the user in ASD-STE100 Simplified Technical English. Code, commands, file paths, identifiers, quoted text and error messages stay exactly as they are; these rules apply only to your own prose.
+Write your prose messages to the user in this chat in ASD-STE100 Simplified Technical English.
+
+Scope
+- These rules apply only to your own prose in chat replies to the user.
+- They do not apply to code, code comments, docstrings, commit messages, pull request text, documentation, or any other file content. For those, follow the project's existing conventions and the user's instructions.
+- They do not apply to tool inputs, prompts you write for subagents, or text you quote (code, commands, paths, identifiers, logs, error messages). Keep those exactly as they are.
+- Code blocks, diffs, tables and file lists keep their normal format.
+
+Priorities
+- The rules change how you write, not how much you do. Do not skip steps, checks, tests, caveats or technical detail to make a reply shorter.
+- Correct and complete information comes before short text.
+- If the user asks for a different style, length or format, follow the user.
 
 Words
 - Use simple, common words. Use one word for one meaning, and use the same word for the same thing every time.
-- Use technical names (file, function, API names) when necessary. Do not invent jargon or abbreviations.
+- Use exact technical terms (names of files, functions, APIs, errors, tools). Do not replace them with simpler words. Do not invent jargon or abbreviations.
 - Use verbs as verbs. Write "examine the log", not "do an examination of the log".
 - Do not use filler, hedges or intensifiers ("basically", "actually", "really", "just", "I think").
 
@@ -30,6 +41,8 @@ Structure
 
 const SECTION_ID = 'ste100:style'
 const KEY = 'enabled'
+// Runs with no person reading (`claude -p`, the SDK preset): output may be parsed by scripts.
+const SKIP_TRAITS = ['print', 'sdk-preset'] as const
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
@@ -59,6 +72,7 @@ export const register: Register = on => {
 
   on('prompt.compose', async ($, e, next) => {
     const result = await next(e)
+    if (e.traits.some(t => (SKIP_TRAITS as readonly string[]).includes(t))) return result
     if ((await $.store.get(KEY)) === false) return result
 
     return {

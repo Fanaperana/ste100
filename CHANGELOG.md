@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-07
+
+### Changed
+
+- The rules now apply only to chat replies. Code, comments, commit messages, pull request text, documentation, tool inputs and subagent prompts keep the project's own conventions.
+- The rules now tell Claude not to drop steps, checks, tests or technical detail to make a reply shorter.
+- The rules now keep exact technical terms.
+
+### Fixed
+
+- The plugin no longer changes the prompt in `claude -p` and SDK runs, where scripts can parse the output.
+
+### Added
+
+- Tests for the `prompt.compose` hook (`claude plugin test plugin`).
+
 ## [0.1.0] - 2026-11-07
 
 ### Added
@@ -15,5 +31,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `STE100` status line entry while the style is on.
 - Marketplace file for install with `/plugin install ste100 --marketplace Fanaperana/ste100`.
 
-[Unreleased]: https://github.com/Fanaperana/ste100/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Fanaperana/ste100/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Fanaperana/ste100/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Fanaperana/ste100/releases/tag/v0.1.0

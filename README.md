@@ -35,7 +35,18 @@
 STE is a controlled language. The aerospace industry made it for maintenance manuals, so that all readers can understand the text quickly and correctly. This plugin applies the same rules to Claude's answers.
 
 > [!NOTE]
-> The plugin changes only Claude's own prose. Code, commands, file paths, identifiers, quotes and error messages stay exactly as they are.
+> The plugin changes only Claude's own prose in chat replies. It does not change how Claude codes.
+
+### Safe for coding
+
+| Not affected | Why |
+| --- | --- |
+| Code, comments, docstrings | They follow your project's conventions. |
+| Commit messages, pull request text, docs | They follow your project's conventions. |
+| Tool inputs and subagent prompts | Only replies to you change. |
+| Commands, paths, identifiers, logs, errors | Quoted exactly. |
+| Depth of work | Claude must not skip steps, checks, tests or technical detail to be short. |
+| `claude -p` and SDK runs | The plugin is off there, so scripts that parse the output do not break. |
 
 ## Why use it
 
@@ -103,10 +114,23 @@ The plugin is active after the install. STE style is **on** by default.
 The plugin gives Claude these rules. They are adapted from the ASD-STE100 specification for chat answers.
 
 <details>
+<summary><b>Scope and priorities</b></summary>
+
+- The rules apply only to Claude's prose in chat replies.
+- Code, comments, commit messages, pull request text, documentation and other file content follow the project's conventions.
+- Tool inputs, subagent prompts and quoted text do not change.
+- Code blocks, diffs, tables and file lists keep their normal format.
+- Claude must not skip steps, checks, tests, caveats or technical detail to make a reply shorter.
+- Correct and complete information comes before short text.
+- If you ask for a different style, length or format, Claude follows you.
+
+</details>
+
+<details>
 <summary><b>Words</b></summary>
 
 - Use simple, common words. Use one word for one meaning, and use the same word for the same thing every time.
-- Use technical names (file, function, API names) when necessary. Do not invent jargon or abbreviations.
+- Use exact technical terms (names of files, functions, APIs, errors, tools). Do not replace them with simpler words. Do not invent jargon or abbreviations.
 - Use verbs as verbs. Write "examine the log", not "do an examination of the log".
 - Do not use filler, hedges or intensifiers ("basically", "actually", "really", "just", "I think").
 
@@ -150,7 +174,7 @@ flowchart LR
 
 1. **`session.start`** registers the `/ste` command and shows `STE100` in the status line.
 2. **`command.run`** handles `/ste`, and saves your choice in the plugin's persistent store.
-3. **`prompt.compose`** adds one section, `ste100:style`, at the end of the system prompt when the style is on.
+3. **`prompt.compose`** adds one section, `ste100:style`, at the end of the system prompt when the style is on. It adds nothing in `claude -p` and SDK runs.
 
 The section goes after the prompt cache boundary (`scope: 'session'`). Thus, the shared prompt cache is not affected.
 
@@ -165,7 +189,8 @@ ste100/
 │   │   └── plugin.json       # plugin manifest
 │   └── hooks/
 │       ├── hooks.json        # names the hooks module
-│       └── register.ts       # the rules and the hooks
+│       ├── register.ts       # the rules and the hooks
+│       └── register.test.ts  # tests
 ├── .github/                  # issue and pull request templates
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
@@ -182,9 +207,10 @@ ste100/
    git clone https://github.com/Fanaperana/ste100.git
    ```
 2. Edit the `STE_RULES` text in [`plugin/hooks/register.ts`](plugin/hooks/register.ts).
-3. Check the plugin:
+3. Check and test the plugin:
    ```bash
    claude plugin validate ste100/plugin
+   claude plugin test ste100/plugin
    ```
 4. Run Claude Code with your local copy:
    ```bash
@@ -211,7 +237,7 @@ No. The rules apply only to Claude's prose. Code, commands, paths, identifiers a
 <details>
 <summary><b>Does it make Claude less capable?</b></summary>
 
-No. The plugin changes only the writing style of the answers. It does not remove or change other instructions, tools or skills.
+No. The plugin changes only the writing style of the answers. It does not remove or change other instructions, tools or skills. The rules tell Claude not to drop steps, checks or technical detail to be short.
 
 </details>
 
