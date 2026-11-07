@@ -107,7 +107,7 @@ The plugin is active after the install. STE style is **on** by default.
 
 - The change applies from your next message.
 - Your choice is kept across sessions.
-- While the style is on, the status line shows **`STE100`**.
+- While the style is on, the status line shows **`ste100 ● on`**.
 
 ## The rules
 
@@ -172,7 +172,7 @@ flowchart LR
     D[prompt.compose] -->|adds the STE rules<br/>to the system prompt| B
 ```
 
-1. **`session.start`** registers the `/ste` command and shows `STE100` in the status line.
+1. **`session.start`** registers the `/ste` command and shows `● on` in the status line.
 2. **`command.run`** handles `/ste`, and saves your choice in the plugin's persistent store.
 3. **`prompt.compose`** adds one section, `ste100:style`, at the end of the system prompt when the style is on. It adds nothing in `claude -p` and SDK runs.
 

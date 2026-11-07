@@ -39,6 +39,8 @@ Structure
 - Do not repeat information. Do not add a summary of what you already said.
 - Do not use preambles or meta-commentary ("Here is...", "Let me explain...").`
 
+// The status line already shows the plugin's name (ste100) as the label.
+const STATUS_ON = '● on'
 const SECTION_ID = 'ste100:style'
 const KEY = 'enabled'
 // Runs with no person reading (`claude -p`, the SDK preset): output may be parsed by scripts.
@@ -51,7 +53,7 @@ export const register: Register = on => {
       description: 'Simplified Technical English style: /ste on, /ste off, or /ste to toggle',
     })
     const isOn = (await $.store.get(KEY)) !== false
-    $.ui.status(isOn ? 'STE100' : undefined)
+    $.ui.status(isOn ? STATUS_ON : undefined)
 
     return next(e)
   })
@@ -61,7 +63,7 @@ export const register: Register = on => {
     const arg = e.args.trim().toLowerCase()
     const isOn = arg === 'on' ? true : arg === 'off' ? false : !wasOn
     await $.store.set(KEY, isOn)
-    $.ui.status(isOn ? 'STE100' : undefined)
+    $.ui.status(isOn ? STATUS_ON : undefined)
 
     return {
       text: isOn
