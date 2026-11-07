@@ -23,17 +23,29 @@ test('adds the STE section after the engine sections, scoped to the chat', async
   expect(ste?.text).toContain('Do not skip steps, checks, tests')
 })
 
-test('leaves the prompt alone in -p and SDK runs', async ($, on) => {
+test('applies in the desktop app, which runs through the SDK', async ($, on) => {
   on('prompt.compose', () => ({ sections: BASE }))
   on('store.get', () => ({ value: undefined }))
-  // Proves the hook ran: with no skip trait it adds the section.
-  const plain = await $.prompt.compose({ ...INPUT, traits: [] })
+
+  for (const surface of ['terminal', 'desktop', 'vscode', 'mobile'] as const) {
+    const { sections } = await $.prompt.compose({
+      ...INPUT,
+      surfaces: [surface],
+      traits: ['print', 'sdk-preset'],
+    })
+    expect(sections.some(s => s.id === 'ste100:style')).toBe(true)
+  }
+})
+
+test('leaves the prompt alone when nothing draws the session (claude -p)', async ($, on) => {
+  on('prompt.compose', () => ({ sections: BASE }))
+  on('store.get', () => ({ value: undefined }))
+  // Proves the hook ran: with a surface it adds the section.
+  const plain = await $.prompt.compose({ ...INPUT, traits: ['print'] })
   expect(plain.sections.some(s => s.id === 'ste100:style')).toBe(true)
 
-  for (const trait of ['print', 'sdk-preset'] as const) {
-    const { sections } = await $.prompt.compose({ ...INPUT, traits: [trait] })
-    expect(sections.some(s => s.id === 'ste100:style')).toBe(false)
-  }
+  const headless = await $.prompt.compose({ ...INPUT, surfaces: [], traits: ['print'] })
+  expect(headless.sections.some(s => s.id === 'ste100:style')).toBe(false)
 })
 
 test('leaves the prompt alone after /ste off', async ($, on) => {

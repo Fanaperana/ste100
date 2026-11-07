@@ -46,7 +46,7 @@ STE is a controlled language. The aerospace industry made it for maintenance man
 | Tool inputs and subagent prompts | Only replies to you change. |
 | Commands, paths, identifiers, logs, errors | Quoted exactly. |
 | Depth of work | Claude must not skip steps, checks, tests or technical detail to be short. |
-| `claude -p` and SDK runs | The plugin is off there, so scripts that parse the output do not break. |
+| Headless `claude -p` runs | The plugin is off there, so scripts that parse the output do not break. It stays on in the terminal, the desktop app and IDE extensions. |
 
 ## Why use it
 
@@ -174,7 +174,7 @@ flowchart LR
 
 1. **`session.start`** registers the `/ste` command and shows `● on` in the status line.
 2. **`command.run`** handles `/ste`, and saves your choice in the plugin's persistent store.
-3. **`prompt.compose`** adds one section, `ste100:style`, at the end of the system prompt when the style is on. It adds nothing in `claude -p` and SDK runs.
+3. **`prompt.compose`** adds one section, `ste100:style`, at the end of the system prompt when the style is on. It adds nothing when no screen shows the session (a headless `claude -p` run).
 
 The section goes after the prompt cache boundary (`scope: 'session'`). Thus, the shared prompt cache is not affected.
 

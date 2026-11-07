@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-11-07
+
+### Fixed
+
+- The plugin did not work in the Claude desktop app. Version 0.1.1 skipped every run with the `print` or `sdk-preset` trait, and the desktop app has these traits. The plugin now skips only sessions that no screen shows (a headless `claude -p` run).
+
 ## [0.1.2] - 2026-11-07
 
 ### Changed
@@ -37,7 +43,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `STE100` status line entry while the style is on.
 - Marketplace file for install with `/plugin install ste100 --marketplace Fanaperana/ste100`.
 
-[Unreleased]: https://github.com/Fanaperana/ste100/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/Fanaperana/ste100/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/Fanaperana/ste100/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/Fanaperana/ste100/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Fanaperana/ste100/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Fanaperana/ste100/releases/tag/v0.1.0

@@ -43,8 +43,6 @@ Structure
 const STATUS_ON = '● on'
 const SECTION_ID = 'ste100:style'
 const KEY = 'enabled'
-// Runs with no person reading (`claude -p`, the SDK preset): output may be parsed by scripts.
-const SKIP_TRAITS = ['print', 'sdk-preset'] as const
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
@@ -74,7 +72,9 @@ export const register: Register = on => {
 
   on('prompt.compose', async ($, e, next) => {
     const result = await next(e)
-    if (e.traits.some(t => (SKIP_TRAITS as readonly string[]).includes(t))) return result
+    // No surface draws the session (`claude -p`, a script): output may be parsed, so leave it.
+    // The desktop app also has the `print` trait, so do not test traits here.
+    if (e.surfaces.length === 0) return result
     if ((await $.store.get(KEY)) === false) return result
 
     return {
