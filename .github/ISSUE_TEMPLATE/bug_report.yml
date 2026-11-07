@@ -1,0 +1,63 @@
+name: Bug report
+description: Report a problem with the ste100 plugin.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for the report. Search the existing issues before you continue.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem. Paste the part of Claude's answer that shows it, if possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Install the plugin.
+        2. Type ...
+        3. See ...
+    validations:
+      required: true
+  - type: input
+    id: claude-version
+    attributes:
+      label: Claude Code version
+      description: Output of `claude --version`.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where do you use Claude Code?
+      options:
+        - Terminal
+        - Desktop app
+        - VS Code
+        - JetBrains
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11, macOS 15, Ubuntu 24.04 ...
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: I removed keys, tokens and personal data from this report.
+          required: true
